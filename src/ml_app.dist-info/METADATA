@@ -1,0 +1,10 @@
+Metadata-Version: 2.1
+Briefcase-Version: 0.3.3
+Name: ml-app
+Formal-Name: Machine Learning Portal
+App-ID: com.example.ml-app
+Version: 0.0.1
+Home-page: https://example.com/ml-app
+Author: Tim Duffy, Jacob Frost
+Author-email: duffyjtim@gmail.com
+Summary: Simple GUI that launches jupyter notebooks about ML
