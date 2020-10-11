@@ -3,8 +3,8 @@ Simple GUI that launches jupyter notebooks about ML
 """
 import toga
 from toga.style import Pack
-from toga.style.pack import COLUMN, ROW
-import os
+from toga.style.pack import COLUMN, ROW, CENTER
+import subprocess
 
 
 class MachineLearningPortal(toga.App):
@@ -19,7 +19,8 @@ class MachineLearningPortal(toga.App):
         """
         main_box = toga.Box()
 
-        
+        openJupyterButton = toga.Button('Turn on Jupyter', style=Pack(height=20, padding=13), on_press=self.openJupyterNotebook)
+        closeJupyterButton = toga.Button('Close on Jupyter', style=Pack(height=20, padding=13), on_press=self.closeJupyterNotebook)
 
         button1 = toga.Button('Linear Regression', style=Pack(height=20, padding=13), on_press=self.LinearRegression)
         button2 = toga.Button('Logistic Regression', style=Pack(height=20, padding=13), on_press=self.LogisticRegression)
@@ -32,7 +33,19 @@ class MachineLearningPortal(toga.App):
         button9 = toga.Button('Optimization with Linear Programming', style=Pack(height=20, padding=13), on_press=self.OptimizationWithLinearProgramming)
         button10 = toga.Button('Massively Parallel Programming with Spark', style=Pack(height=20, padding=13), on_press=self.MassivelyParallelProgrammingWithSpark)
 
-        main_box.add(button1, button2, button3, button4, button5, button6, button7, button8, button9, button10)
+
+        scroll_box = toga.Box(children=[], style=Pack(direction=COLUMN, padding=10, flex=1))
+
+        scroll_box.add(button1, button2, button3, button4, button5, button6, button7, button8, button9, button10)
+
+        scroll_box.add(openJupyterButton, closeJupyterButton)
+
+        scroll_view = toga.ScrollContainer(content=scroll_box, style=Pack(padding=10))
+
+
+
+        main_box.add(scroll_view)
+        #main_box.add(button1, button2, button3, button4, button5, button6, button7, button8, button9, button10)
 
 
         self.main_window = toga.MainWindow(title=self.formal_name)
@@ -61,15 +74,11 @@ class MachineLearningPortal(toga.App):
     def MassivelyParallelProgrammingWithSpark(self, widget):
         print("Massively Parallel Programming with Spark button has been pressed")
 
-    #TODO: Be able to launch and close jupyter from the application
+    def openJupyterNotebook(self, widget):
+        subprocess.Popen('jupyter notebook --no-browser', shell=True)
+    def closeJupyterNotebook(self, widget):
+        subprocess.Popen('jupyter notebook stop', shell=True)
 
-    #Calling this function WILL CRASH the app
-    def openJupyterNotebook(self):
-        os.system("jupyter notebook --no-browser")
-        print("Opening jupyter notebook")
-    def closeJupyterNotebook(self):
-        os.system("jupyter notebook stop")
-        print("Closing jupyter notebook")
 
 
 def main():
