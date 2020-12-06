@@ -6,10 +6,16 @@ from toga.style import Pack
 from toga.style.pack import COLUMN, ROW, CENTER
 import subprocess
 import os
+import webbrowser  
+
+
+
+#For the data screen
+import csv
 from functools import partial
 
-class MachineLearningPortal(toga.App):
 
+class MachineLearningPortal(toga.App):
     def startup(self):
         """
         Construct and show the Toga application.
@@ -18,102 +24,137 @@ class MachineLearningPortal(toga.App):
         We then create a main window (with a name matching the app), and
         show the main window.
         """
+        ## Define all the images for the new buttons,
+        ## From a quick search this seems harder than it is worth as a grade
+        """
+        Linear_Regression_Image="Images/Linear_Regression"
+        Logistic_Regression_Image="Images/Logistic_Regression"
+        Bayesian_Classification_Image="Images/Bayesian_Classification"
+        Decision_Tree_Image="Images/Decision_Tree"
+        Random_Forest_Image="Images/Random_Forest"
+        Cluster_Analysis_Image="Images/Cluster_Analysis"
+        Fuzzy_Data_Matching_Image="Images/Fuzzy_Data_Matching"
+        Multi-Layer_Neural_Networks_Image="Images/Multi-Layer_Neural_Networks"
+        Optimization_with_Linear_Programming_Image="Images/Optimization_with_Linear_Programming"
+        Massively_Parallel_Programming_with_Spark_Image="Images/Massively_Parallel_Programming_with_Spark"
+        """
+
+        self.startJupyterNotebook(self)
+
         main_box = toga.Box()
+        scroll_box = toga.Box(children=[], style=Pack(direction=COLUMN, padding=10, flex=1, text_align=CENTER))
 
-        openJupyterButton = toga.Button('Turn on Jupyter', style=Pack(height=20, padding=13), on_press=self.openJupyterNotebook)
+        
+        group1Title = toga.Label('Linear Regression')
+        def b1callback(button):
+            self.openNotebook(self, "Regressions with charts.ipynb")
+            pass
+        button1 = toga.Button('Regression With Charts', style=Pack(height=20, padding=13), on_press=b1callback)
+        def b2callback(button):
+            self.openNotebook(self, "Non Linear Regression.ipynb")
+            pass
+        button2 = toga.Button('Non-Linear Regression', style=Pack(height=20, padding=13), on_press=b2callback)
+        scroll_box.add(group1Title, button1, button2)
+
+        group2Title = toga.Label('Classification')
+        def b3callback(button):
+            self.openNotebook(self, "Logistic Regression.ipynb")
+            pass
+        button3 = toga.Button('Logistic Regression', style=Pack(height=20, padding=13), on_press=b3callback)
+        def b4callback(button):
+            self.openNotebook(self, "Decision Tree Random Forest.ipynb")
+            pass
+        button4 = toga.Button('Decision Tree and Random Forest', style=Pack(height=20, padding=13), on_press=b4callback)
+        def b5callback(button):
+            self.openNotebook(self, "Naive Bayes.ipynb")
+            pass
+        button5 = toga.Button('Bayesian Classification', style=Pack(height=20, padding=13), on_press=b5callback)
+        scroll_box.add(group2Title, button3, button4, button5)
+
+        group3Title = toga.Label('K-Means Clustering')
+        def b6callback(button):
+            self.openNotebook(self, "K-Mean-Clustering-Final-WithLib.ipynb")
+            pass
+        button6 = toga.Button('Cluster Analysis', style=Pack(height=20, padding=13), on_press=b6callback)
+        scroll_box.add(group3Title, button6)
+
+
+        group4Title = toga.Label('Linear Programming Optimization')
+        def b7callback(button):
+            self.openNotebook(self, "Linear Programming.ipynb")
+            pass
+        button7 = toga.Button('Optimization with Linear Programming', style=Pack(height=20, padding=13), on_press=b7callback)
+        scroll_box.add( group4Title, button7)
+
+
+        group5Title = toga.Label('Fuzzy Matching of Data')
+        def b8callback(button):
+            self.openNotebook(self, "Fuzzy Matching of data.ipynb")
+            pass
+        button8 = toga.Button('Fuzzy Data Matching', style=Pack(height=20, padding=13), on_press=b8callback)
+        scroll_box.add(group5Title, button8)
+        
+
+        group6Title = toga.Label('Neural Networking:')
+        def b9callback(button):
+            self.openNotebook(self, "Neural Network1.ipynb")
+            pass
+        button9 = toga.Button('Neural Networks 1', style=Pack(height=20, padding=13), on_press=b9callback)
+        def b15callback(button):
+            self.openNotebook(self, "Neural Network2.ipynb")
+            pass
+        button15 = toga.Button('Neural Networks 2', style=Pack(height=20, padding=13), on_press=b15callback)
+        def b16callback(button):
+            self.openNotebook(self, "Neural Network 3.ipynb")
+            pass
+        button16 = toga.Button('Neural Networks 3', style=Pack(height=20, padding=13), on_press=b16callback)
+        scroll_box.add(group6Title, button9, button15, button16)
+
+
+        group7Title = toga.Label('Spark')
+        def b10callback(button):
+            self.openNotebook(self, "Using Spark.ipynb")
+            pass
+        button10 = toga.Button('Massively Parallel Programming with Spark', style=Pack(height=20, padding=13), on_press=b10callback)
+        scroll_box.add(group7Title, button10)
+
+        group8Title = toga.Label('Extra')
+        openJupyterButton = toga.Button('Turn on Jupyter', style=Pack(height=20, padding=13), on_press=self.startJupyterNotebook)
         closeJupyterButton = toga.Button('Close on Jupyter', style=Pack(height=20, padding=13), on_press=self.closeJupyterNotebook)
+        scroll_box.add(group8Title, openJupyterButton, closeJupyterButton)
 
-        button1 = toga.Button('Linear Regression', style=Pack(height=20, padding=13), on_press=self.LinearRegression)
-        button2 = toga.Button('Logistic Regression', style=Pack(height=20, padding=13), on_press=self.LogisticRegression)
-        button3 = toga.Button('Bayesian Classification', style=Pack(height=20, padding=13), on_press=self.BayesianClassification)
-        button4 = toga.Button('Decision Tree', style=Pack(height=20, padding=13), on_press=self.DecisionTree)
-        button5 = toga.Button('Random Forest', style=Pack(height=20, padding=13), on_press=self.RandomForest)
-        button6 = toga.Button('Cluster Analysis', style=Pack(height=20, padding=13), on_press=self.ClusterAnalysis)
-        button7 = toga.Button('Fuzzy Data Matching', style=Pack(height=20, padding=13), on_press=self.FuzzyDataMatching)
-        button8 = toga.Button('Multi-Layer Neural Networks', style=Pack(height=20, padding=13), on_press=self.MultiLayerNeuralNetworks)
-        button9 = toga.Button('Optimization with Linear Programming', style=Pack(height=20, padding=13), on_press=self.OptimizationWithLinearProgramming)
-        button10 = toga.Button('Massively Parallel Programming with Spark', style=Pack(height=20, padding=13), on_press=self.MassivelyParallelProgrammingWithSpark)
-        button11 = toga.Button('Change Data Set', style=Pack(height=20, padding=13), on_press=self.changeDataset)
-        scroll_box = toga.Box(children=[], style=Pack(direction=COLUMN, padding=10, flex=1))
-        scroll_box.add(button1, button2, button3, button4, button5, button6, button7, button8, button9, button10, button11)
-        scroll_box.add(openJupyterButton, closeJupyterButton)
         scroll_view = toga.ScrollContainer(content=scroll_box, style=Pack(padding=10))
-
-
-
         main_box.add(scroll_view)
-
-
-        self.main_window = toga.MainWindow(title=self.formal_name)
-        self.main_window.content = main_box
-        self.main_window.show()
-
-
-    def handle_dataset_selection(self, widget, data):
-        #self.data = pd.read_csv(data)
-        print(data)
-
-    def changeDataset(self, widget):
-        main_box = toga.Box(style=Pack(direction=COLUMN))
-        #TODO: WE should make this a list of buttons
-        dataFiles = [
-            (i, i.split(".")[0].replace("_", " "))
-            for i in os.listdir('./Data')
-        ]
-
-        self.left_container = toga.Box(style=Pack(direction=COLUMN, padding_top=50))
-
-        for i in dataFiles:
-            tmpbutton = toga.Button(i[1], style=Pack(width=100, height=25), on_press=partial(self.handle_dataset_selection,data=i[0]))
-            self.left_container.add(tmpbutton)
-
-        #TODO: we should change this is a datatable and have it show the data from the file selected
-        right_content = toga.Box(
-            style=Pack(direction=COLUMN, padding_top=50, flex= 5)
-        )
-
-
-
-        right_container = toga.ScrollContainer(horizontal=False)
-
-        right_container.content = right_content
-
-        split = toga.SplitContainer()
-
-        split.content = [self.left_container, right_container]
-
-        main_box.add(split)
 
         self.main_window = toga.MainWindow(title=self.formal_name)
         self.main_window.content = main_box
         self.main_window.show()
 
     #Functions for when any button is pressed
-    def LinearRegression(self, widget):
-        print("Linear Regression button has been pressed")
-    def LogisticRegression(self, widget):
-        print("Logistic Regression button has been pressed")
-    def BayesianClassification(self, widget):
-        print("Bayesian Classification button has been pressed")
-    def DecisionTree(self, widget):
-        print("Decision Tree has been pressed")
-    def RandomForest(self, widget):
-        print("Random Forest button has been pressed")
-    def ClusterAnalysis(self, widget):
-        print("Cluster Analysis button has been pressed")
-    def FuzzyDataMatching(self, widget):
-        print("Fuzzy Data Matching button has been pressed")
-    def MultiLayerNeuralNetworks(self, widget):
-        print("Multi-Layer Neural Networks has been pressed")
-    def OptimizationWithLinearProgramming(self, widget):
-        print("Optimization with Linear Programming button has been pressed")
-    def MassivelyParallelProgrammingWithSpark(self, widget):
-        print("Massively Parallel Programming with Spark button has been pressed")
+    def changeTextFile(self, widget, fileName):
+        print("Changing the file to ", fileName)
+        with open("currentDataSet.txt", 'w') as filetowrite:
+            filetowrite.write(fileName)
+            filetowrite.close()
 
-    def openJupyterNotebook(self, widget):
+
+    def startJupyterNotebook(self, widget):
         subprocess.Popen('jupyter notebook --no-browser', shell=True)
+
+
     def closeJupyterNotebook(self, widget):
         subprocess.Popen('jupyter notebook stop', shell=True)
+
+    def openNotebook(self, widget, fileName):
+        fullPath = "/ExampleNotebooks/" +  fileName
+        fullPath = fullPath.replace(" ","%20")
+        fullPath = fullPath.replace("\\","/")
+
+
+        fullPath = "http://localhost:8888/notebooks" + fullPath
+
+
+        webbrowser.open(fullPath, new=0, autoraise=True)
 
 def main():
     return MachineLearningPortal()
